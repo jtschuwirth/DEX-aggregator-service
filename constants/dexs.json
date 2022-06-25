@@ -9,5 +9,11 @@
     },
     "Viperswap": {
         "router": "0xf012702a5f0e54015362cBCA26a26fc90AA832a3"
+    },
+    "Unifi Protocol": {
+        "router": "0xbFD48577e368322966CfdA94c0A63078ce2F0402"
+    },
+    "OpenSwap": {
+        "router": "0x2F99992024DCC51324BA4956bB1c510F36FA54F5"
     }
 }

@@ -53,7 +53,6 @@ def getPrice(RouterContract, inputToken, outputToken, inputAmount):
                 return price
         except:
             continue
-    print("Can't find path")
     return 0
     
 
@@ -66,5 +65,5 @@ def getInputSwaps(inputToken, inputAmount, outputToken):
         if price == 0:
             result.append({dex: "Can't find a valid path"})
         else:
-            result.append({dex: {inputToken: inputAmount, outputToken: price}})
+            result.append({dex: {"input": {"name": inputToken, "amount": inputAmount}, "output": {"name": outputToken, "amount": price}}})
     return result
