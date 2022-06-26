@@ -2,8 +2,9 @@ import json
 
 Dexs = json.load(open("constants/dexs.json"))
 
-def getDexes():
+def getDexes(blockchain):
     result = []
     for dex in Dexs:
-        result.append(dex)
+        if len(dex[blockchain]) != 0:
+            result.append(dex)
     return result

@@ -2,14 +2,13 @@ from web3 import Web3
 from pycoingecko import CoinGeckoAPI
 import json
 
-main_net = 'https://rpc.s0.t.hmny.io'
-w3 = Web3(Web3.HTTPProvider(main_net))
 cg = CoinGeckoAPI()
 
 Tokens = json.load(open("constants/tokens.json"))
 Dexs = json.load(open("constants/dexs.json"))
 RouterABI = json.load(open("constants/UniswapV2Router02.json"))
 FactoryABI = json.load(open("constants/UniswapFactory.json"))
+Blockchains = json.load(open("constants/blockchains.json"))
 
 def pathEvaluation(price, oracle_price):
     if price > oracle_price*1.5 or price < oracle_price*0.5:
@@ -26,10 +25,12 @@ def getOraclePrice(inputToken, outputToken, inAmount):
     output_price = output_price[output_id]["usd"]
     return (input_price/output_price)*inAmount
 
-def getPrice(RouterContract, inputToken, outputToken, inputAmount):
+def getPrice(RouterContract, inputToken, outputToken, inputAmount, blockchain):
     inputAmount = int(inputAmount)
-    inAddress = Tokens[inputToken]["address"]
-    outAddress = Tokens[outputToken]["address"]
+    inAddress = Tokens[inputToken][blockchain]
+    outAddress = Tokens[outputToken][blockchain]
+    if len(inAddress) == 0 or len(outAddress) == 0:
+        return 0 
     inAmount = int(inputAmount * 10**Tokens[inputToken]["decimals"])
     oracle_price = getOraclePrice(inputToken, outputToken, inputAmount)
     try:
@@ -57,11 +58,14 @@ def getPrice(RouterContract, inputToken, outputToken, inputAmount):
     
 
 
-def getInputSwaps(inputToken, inputAmount, outputToken):
+def getInputSwaps(inputToken, inputAmount, outputToken, blockchain):
+    w3 = Web3(Web3.HTTPProvider(Blockchains[blockchain]))
     result = []
     for dex in Dexs:
-        RouterContract = w3.eth.contract(address=Dexs[dex]["router"], abi=RouterABI)
-        price = getPrice(RouterContract, inputToken, outputToken, inputAmount)
+        if len(Dexs[dex][blockchain]) == 0:
+            continue
+        RouterContract = w3.eth.contract(address=Dexs[dex][blockchain], abi=RouterABI)
+        price = getPrice(RouterContract, inputToken, outputToken, inputAmount, blockchain)
         if price == 0:
             result.append({dex: "Can't find a valid path"})
         else:

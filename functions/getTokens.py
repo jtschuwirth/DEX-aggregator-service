@@ -2,8 +2,9 @@ import json
 
 Tokens = json.load(open("constants/tokens.json"))
 
-def getTokens():
+def getTokens(blockchain):
     result = []
     for token in Tokens:
-        result.append(token)
+        if len(token[blockchain]) != 0:
+            result.append(token)
     return result
