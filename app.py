@@ -1,6 +1,7 @@
 from functions.getInputSwaps import getInputSwaps
 from functions.getTokens import getTokens
 from functions.getDexes import getDexes
+from functions.getBlockchains import getBlockchains
 
 def handler(event, context):
     if event["method"] == "getInputSwaps":
@@ -9,3 +10,5 @@ def handler(event, context):
         return {"tokens": getTokens(event["blockchain"])}
     elif event["method"] == "getDexes":
         return {"dexes": getDexes(event["blockchain"])}
+    elif event["method"] == "getBlockchains":
+        return {"blockchains": getBlockchains()}

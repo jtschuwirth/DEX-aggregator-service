@@ -40,10 +40,10 @@ def getPrice(RouterContract, inputToken, outputToken, inputAmount, blockchain):
         if valid:
             #print("Direct Path:", inputToken, outputToken)
             return price
-    except:
-        pass
+    except Exception as e:
+        print(e)
     for token in Tokens:
-        if token == inputToken or token==outputToken:
+        if token == inputToken or token==outputToken or len(Tokens[token][blockchain])==0:
             continue
         try:
             price = RouterContract.functions.getAmountsOut(inAmount, [inAddress, Tokens[token]["address"], outAddress]).call()[2]
@@ -52,8 +52,8 @@ def getPrice(RouterContract, inputToken, outputToken, inputAmount, blockchain):
             if valid:
                 #print("Complexity 1 Path:", inputToken, token,outputToken)
                 return price
-        except:
-            continue
+        except Exception as e:
+            print(e)
     return 0
     
 
