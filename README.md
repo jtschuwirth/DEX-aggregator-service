@@ -12,5 +12,8 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 docker tag dexaggregator:latest 579907623869.dkr.ecr.us-east-1.amazonaws.com/dexaggregator:latest  \
 docker push 579907623869.dkr.ecr.us-east-1.amazonaws.com/dexaggregator:latest
 
+testing:
+pytest test.py
+
 
 
